@@ -133,4 +133,4 @@ app.get('/*',(req,res)=>{
 	res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-app.listen(1337, (req, res) => console.log("running on 1337"));
+app.listen(process.env.PORT || 1337, (req, res) => console.log("running on 1337"));
