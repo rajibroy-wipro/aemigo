@@ -106,10 +106,10 @@ async function getImages(){
 
   var steps = process.env.STEPS;
 
-  var pathA = process.env.IMAGE_FOLDER+'/'+process.env.A+'/Slide'+(parseInt(countA/steps)+1)+'.jpg';
-  var pathB = process.env.IMAGE_FOLDER+'/'+process.env.B+'/Slide'+(parseInt(countB/steps)+1)+'.jpg';
-  var pathC = process.env.IMAGE_FOLDER+'/'+process.env.C+'/Slide'+(parseInt(countC/steps)+1)+'.jpg';
-  var pathD = process.env.IMAGE_FOLDER+'/'+process.env.D+'/Slide'+(parseInt(countD/steps)+1)+'.jpg';
+  var pathA = process.env.IMAGE_FOLDER+'/'+process.env.A+'/Slide'+(parseInt(countA/steps)+1)+'.JPG';
+  var pathB = process.env.IMAGE_FOLDER+'/'+process.env.B+'/Slide'+(parseInt(countB/steps)+1)+'.JPG';
+  var pathC = process.env.IMAGE_FOLDER+'/'+process.env.C+'/Slide'+(parseInt(countC/steps)+1)+'.JPG';
+  var pathD = process.env.IMAGE_FOLDER+'/'+process.env.D+'/Slide'+(parseInt(countD/steps)+1)+'.JPG';
 
   var prefix = 'data:image/jpeg;'
 	teamA = prefix+base64Img.base64Sync(pathA);
