@@ -6,6 +6,8 @@ const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const fs = require('fs')
 const neatCsv = require('neat-csv');
 require('dotenv').config({ path: './server.env' })
+const countWords = require("count-words");
+const sw = require('stopword')
 
 const app = express();
 app.use(cors());
@@ -26,7 +28,9 @@ const csvWriter = createCsvWriter({
 });
 
 var teamA = '', teamB = '', teamC = '', teamD = '';
+var revealA = false, revealB = false, revealC = false, revealD = false;
 
+var words;
 
 async function getCSVData(){
   const buffer = fs.readFileSync(FILE);
@@ -75,11 +79,16 @@ app.post("/participate", async (req, res) => {
 
 async function getImages(){
 
+  revealA = false, revealB = false, revealC = false, revealD = false;
+
+  var input = ''
+
   const rows = await getCSVData();
 
   var countA=0, countB=0, countC=0, countD=0;
   for(var idx=0; idx<rows.length; idx++){
     var row = rows[idx];
+    input = input + ' ' + (row.input);
     switch(row.team.toLowerCase()){
       case process.env.A: countA++; break;
       case process.env.B: countB++; break;
@@ -90,18 +99,22 @@ async function getImages(){
 
   if(countA > process.env.MAX_COUNT){
     countA = process.env.MAX_COUNT
+    revealA = true
   }
 
   if(countB > process.env.MAX_COUNT){
     countB = process.env.MAX_COUNT
+    revealB = true
   }
 
   if(countC > process.env.MAX_COUNT){
     countC = process.env.MAX_COUNT
+    revealC = true
   }
 
   if(countD > process.env.MAX_COUNT){
     countD = process.env.MAX_COUNT
+    revealD = true
   }
 
   var steps = process.env.STEPS;
@@ -116,16 +129,34 @@ async function getImages(){
   teamB = prefix+base64Img.base64Sync(pathB);
   teamC = prefix+base64Img.base64Sync(pathC);
   teamD = prefix+base64Img.base64Sync(pathD);
+
+  input = sw.removeStopwords(input.split(' ')).join(' ');
+  var wordCount = countWords(input,true)
+  var keys = Object.keys(wordCount)
+  words = []
+  for(idx = 0; idx< keys.length; idx++){
+    var word = {}
+    const key = keys[idx]
+    word["value"] = key;
+    word["count"] = wordCount[key];
+    words.push(word);
+  }
 }
 
 setInterval(() => {
   console.log('Getting images');
   getImages();
-},10000);
+},5000);
 
 app.post('/results', async (req,res)=>{
 
-  res.json({"A":teamA,"B":teamB,"C":teamC,"D":teamD});
+  res.json({"A":{"revealed":revealA,"logo":teamA},"B":{"revealed":revealB,"logo":teamB},"C":{"revealed":revealC,"logo":teamC},"D":{"revealed":revealD,"logo":teamD}});
+
+});
+
+app.post('/words', async (req,res)=>{
+
+  res.json({"words":words});
 
 });
 
@@ -133,4 +164,4 @@ app.get('/*',(req,res)=>{
 	res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-app.listen(process.env.PORT || 1337, (req, res) => console.log("running on 1337"));
+app.listen(process.env.PORT || 1337, (req, res) => console.log("running on "+process.env.PORT));
