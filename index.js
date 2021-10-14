@@ -27,7 +27,7 @@ const csvWriter = createCsvWriter({
   append: true
 });
 
-var teamA = '', teamB = '', teamC = '', teamD = '';
+var teamA = teamB = teamC = teamD = process.env.loader;
 var revealA = false, revealB = false, revealC = false, revealD = false;
 
 var words;
@@ -79,56 +79,83 @@ app.post("/participate", async (req, res) => {
 
 async function getImages(){
 
-  revealA = false, revealB = false, revealC = false, revealD = false;
-
   var input = ''
-
-  const rows = await getCSVData();
-
-  var countA=0, countB=0, countC=0, countD=0;
-  for(var idx=0; idx<rows.length; idx++){
-    var row = rows[idx];
-    input = input + ' ' + (row.input);
-    switch(row.team.toLowerCase()){
-      case process.env.A: countA++; break;
-      case process.env.B: countB++; break;
-      case process.env.C: countC++; break;
-      case process.env.D: countD++; break;
-    }
-  }
-
-  if(countA > process.env.MAX_COUNT){
-    countA = process.env.MAX_COUNT
-    revealA = true
-  }
-
-  if(countB > process.env.MAX_COUNT){
-    countB = process.env.MAX_COUNT
-    revealB = true
-  }
-
-  if(countC > process.env.MAX_COUNT){
-    countC = process.env.MAX_COUNT
-    revealC = true
-  }
-
-  if(countD > process.env.MAX_COUNT){
-    countD = process.env.MAX_COUNT
-    revealD = true
-  }
-
-  var steps = process.env.STEPS;
-
-  var pathA = process.env.IMAGE_FOLDER+'/'+process.env.A+'/Slide'+(parseInt(countA/steps)+1)+'.JPG';
-  var pathB = process.env.IMAGE_FOLDER+'/'+process.env.B+'/Slide'+(parseInt(countB/steps)+1)+'.JPG';
-  var pathC = process.env.IMAGE_FOLDER+'/'+process.env.C+'/Slide'+(parseInt(countC/steps)+1)+'.JPG';
-  var pathD = process.env.IMAGE_FOLDER+'/'+process.env.D+'/Slide'+(parseInt(countD/steps)+1)+'.JPG';
-
   var prefix = 'data:image/jpeg;'
-	teamA = prefix+base64Img.base64Sync(pathA);
-  teamB = prefix+base64Img.base64Sync(pathB);
-  teamC = prefix+base64Img.base64Sync(pathC);
-  teamD = prefix+base64Img.base64Sync(pathD);
+
+  if(process.env.revealAll === "true"){
+    var pathA = process.env.IMAGE_FOLDER+'/'+process.env.A+'/Slide26.JPG';
+    var pathB = process.env.IMAGE_FOLDER+'/'+process.env.B+'/Slide26.JPG';
+    var pathC = process.env.IMAGE_FOLDER+'/'+process.env.C+'/Slide26.JPG';
+    var pathD = process.env.IMAGE_FOLDER+'/'+process.env.D+'/Slide26.JPG';
+
+    
+    teamA = prefix+base64Img.base64Sync(pathA);
+    teamB = prefix+base64Img.base64Sync(pathB);
+    teamC = prefix+base64Img.base64Sync(pathC);
+    teamD = prefix+base64Img.base64Sync(pathD);
+
+    revealA = true, revealB = true, revealC = true, revealD = true;
+
+    const rows = await getCSVData();
+
+    for(var idx=0; idx<rows.length; idx++){
+      var row = rows[idx];
+      input = input + ' ' + (row.input);
+    }
+
+  }else{
+
+    revealA = false, revealB = false, revealC = false, revealD = false;
+
+    var input = ''
+
+    const rows = await getCSVData();
+
+    var countA=0, countB=0, countC=0, countD=0;
+    for(var idx=0; idx<rows.length; idx++){
+      var row = rows[idx];
+      input = input + ' ' + (row.input);
+      switch(row.team.toLowerCase()){
+        case process.env.A: countA++; break;
+        case process.env.B: countB++; break;
+        case process.env.C: countC++; break;
+        case process.env.D: countD++; break;
+      }
+    }
+
+    if(countA >= process.env.MAX_COUNT){
+      countA = process.env.MAX_COUNT
+      revealA = true
+    }
+
+    if(countB >= process.env.MAX_COUNT){
+      countB = process.env.MAX_COUNT
+      revealB = true
+    }
+
+    if(countC >= process.env.MAX_COUNT){
+      countC = process.env.MAX_COUNT
+      revealC = true
+    }
+
+    if(countD >= process.env.MAX_COUNT){
+      countD = process.env.MAX_COUNT
+      revealD = true
+    }
+
+    var steps = process.env.STEPS;
+
+    var pathA = process.env.IMAGE_FOLDER+'/'+process.env.A+'/Slide'+(parseInt(countA/steps)+1)+'.JPG';
+    var pathB = process.env.IMAGE_FOLDER+'/'+process.env.B+'/Slide'+(parseInt(countB/steps)+1)+'.JPG';
+    var pathC = process.env.IMAGE_FOLDER+'/'+process.env.C+'/Slide'+(parseInt(countC/steps)+1)+'.JPG';
+    var pathD = process.env.IMAGE_FOLDER+'/'+process.env.D+'/Slide'+(parseInt(countD/steps)+1)+'.JPG';
+
+    teamA = prefix+base64Img.base64Sync(pathA);
+    teamB = prefix+base64Img.base64Sync(pathB);
+    teamC = prefix+base64Img.base64Sync(pathC);
+    teamD = prefix+base64Img.base64Sync(pathD);
+
+  }
 
   input = sw.removeStopwords(input.split(' ')).join(' ');
   var wordCount = countWords(input,true)

@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/static/css/main.c11f0ce1.chunk.css",
-    "main.js": "/static/js/main.ecbcb672.chunk.js",
+    "main.css": "/static/css/main.def42974.chunk.css",
+    "main.js": "/static/js/main.302c8cc2.chunk.js",
     "runtime-main.js": "/static/js/runtime-main.0e4d6f1d.js",
-    "static/js/2.1dd271cd.chunk.js": "/static/js/2.1dd271cd.chunk.js",
+    "static/js/2.219a1f8f.chunk.js": "/static/js/2.219a1f8f.chunk.js",
     "static/js/3.7395a091.chunk.js": "/static/js/3.7395a091.chunk.js",
     "index.html": "/index.html",
-    "static/js/2.1dd271cd.chunk.js.LICENSE.txt": "/static/js/2.1dd271cd.chunk.js.LICENSE.txt",
+    "static/js/2.219a1f8f.chunk.js.LICENSE.txt": "/static/js/2.219a1f8f.chunk.js.LICENSE.txt",
     "static/media/aemigologo.e36a0700.png": "/static/media/aemigologo.e36a0700.png",
     "static/media/loader-meta.6a77a9a6.gif": "/static/media/loader-meta.6a77a9a6.gif"
   },
   "entrypoints": [
     "static/js/runtime-main.0e4d6f1d.js",
-    "static/js/2.1dd271cd.chunk.js",
-    "static/css/main.c11f0ce1.chunk.css",
-    "static/js/main.ecbcb672.chunk.js"
+    "static/js/2.219a1f8f.chunk.js",
+    "static/css/main.def42974.chunk.css",
+    "static/js/main.302c8cc2.chunk.js"
   ]
 }
